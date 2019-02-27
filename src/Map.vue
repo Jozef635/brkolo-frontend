@@ -62,7 +62,7 @@
                    this.mp = mapDoc.MapProxy;
                    this.mp.extentHandler = this.getPostboxes;
                    this.mp.markerClickHandler = this.getInfo;
-                   this.mp.postboxMarkerOptions = { url: require('../assets/postbox_icon.svg')};
+                   this.mp.postboxMarkerOptions = { url: require('../assets/map_icon.svg')};
                    this.mp.loadMap(this.geoloc);
                    console.log('Map handlers mapped to vue methods');
                    

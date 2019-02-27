@@ -22,9 +22,9 @@ Vue.use(VueResource);
 Vue.use(VueTimers);
 Vue.use(Vuetify, {
   theme: {
-    primary: colors.orange.darken1,
-    secondary: colors.orange.lighten5,
-    accent: colors.deepPurple.base
+    primary: colors.green.darken2,
+    secondary: colors.yellow.darken2,
+    accent: colors.deepOrange.accent4
   }
 });
 

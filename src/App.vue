@@ -1,19 +1,22 @@
 <template>
   <div id="app">
 <v-app>
-  <v-navigation-drawer class="pa-0" fixed clipped v-model="drawer" width="300" app>
-      
-      <iframe id="ads" :src="addsUrl" />
+  <v-navigation-drawer class="pa-3" fixed clipped v-model="drawer" app>
+      <h2>Vítejte!</h2>
+      <p>Brkolo 2019 co to je</p>
+      <h3>Pravidla</h3>
+      <p>Irure laborum sit Lorem do est minim. Nostrud aliquip enim sint sit occaecat reprehenderit exercitation ut aliqua nisi tempor commodo do. Minim dolore eu anim ad adipisicing pariatur. Dolor sunt et mollit ea sunt magna proident minim anim pariatur nostrud.</p>
+      <p>Adipisicing nostrud eu pariatur veniam exercitation minim nisi incididunt nulla nostrud minim. Tempor sunt reprehenderit dolore culpa aliqua ipsum nostrud excepteur sunt nisi minim labore non mollit. Est velit labore nisi ullamco dolore amet mollit ex est. Mollit velit proident minim cillum do esse consectetur in sit. Id proident in anim ullamco labore Lorem ipsum.</p>
+      <p>Consectetur reprehenderit est dolor nisi qui irure tempor sit sint dolore quis anim Lorem. Laboris id incididunt velit minim laboris esse consequat nostrud officia minim qui occaecat eiusmod. Ea ea reprehenderit dolore et sint veniam officia laboris.</p>
   </v-navigation-drawer>
   <v-navigation-drawer fixed clipped right app v-model="detail">
       <detail></detail>
   </v-navigation-drawer>
   <v-toolbar app clipped-right clipped-left fixed dark color="primary">
-       
-        
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>   
+      <img style="height:38px" src="../assets/dvojka_title.png" />
       <v-toolbar-title style="width: 400px" class="ml-0 pl-3">
-          <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-          
+           
           <span class="hidden-sm-and-down">{{ title }}</span></v-toolbar-title>
       <map-suggest/>
       <v-spacer></v-spacer>
@@ -52,10 +55,9 @@
         },
         data: function () {
             return {
-                title: 'Mapa poštovních schránek',
+                title: 'Brkolo 2019',
                 drawer: true,
                 detail2 : false,
-                addsUrl: require('./sklik.html'),
             }
         },
         computed: {
@@ -75,11 +77,4 @@
     }
 </script>
 <style scoped>
- iframe#ads {
-     width: 300px;
-     height: 600px;
-     border:0px;
-     padding:0px;
-     margin:0px;
- }
 </style>
