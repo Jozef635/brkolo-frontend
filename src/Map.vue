@@ -96,9 +96,9 @@
                         this.mp.setExtent(loc, this.showLoc);
                     }
                     this.$store.dispatch({type: 'changeLoc', loc: loc });
-                });
+                }, null, {enableHighAccuracy:true, maximumAge:15000});
             }
-            }
+            },
         },
         timers: {
             mapLoadCheck: { time: 100, autostart: true, immediate: true, repeat: true },
