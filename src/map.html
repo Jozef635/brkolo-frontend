@@ -56,7 +56,7 @@
                 url: SMap.CONFIG.img+"/marker/drop-red.png"
             },
             locMarker: false,
-            postboxMarkerOptions: {}, 
+            poiMarkerOptions: {}, 
 
             mapClick: function (signal) {
                 var event = signal.data.event;
@@ -97,7 +97,7 @@
             addMarkers: function(markers) {
                 var t = this;
                 markers.forEach(m => {
-                    var marker = new SMap.Marker(SMap.Coords.fromWGS84(m.lon, m.lat), m.id, t.postboxMarkerOptions);
+                    var marker = new SMap.Marker(SMap.Coords.fromWGS84(m.lon, m.lat), m.id, t.poiMarkerOptions);
                     marker.getContainer()[SMap.LAYER_MARKER].style.cursor = "pointer";
                     t.markerLayer.addMarker(marker);
                 });
@@ -114,13 +114,21 @@
                 this.locMarker = null;
                 
             },
+            
+            updateLocMarker: function(loc) {
+                if(!this.locMarker) {
+                    this.locMarker = new SMap.Marker(SMap.Coords.fromWGS84(loc.lon, loc.lat), 'loc', this.locMarkerOptions);
+                    this.addLocMarker();
+                } else {
+                    this.locMarker.setCoords(SMap.Coords.fromWGS84(loc.lon, loc.lat));
+                }
+            },
 
             setExtent: function(loc, showMarker) {
                 var center = SMap.Coords.fromWGS84(loc.lon, loc.lat);
                 this.map.setCenterZoom(center, this.zoom);
                 if(showMarker && this.markerLayer) {
-                    this.locMarker = new SMap.Marker(SMap.Coords.fromWGS84(loc.lon, loc.lat), 'loc', this.locMarkerOptions);
-                    this.addLocMarker();
+                    updateLocMarker(loc);
                 }
             },
 
@@ -164,7 +172,7 @@
             extentHandler: null,
             markerClickHandler: null,
 
-            loadMap: function(loc) {
+            loadMap: function(loc, showLoc) {
                 // default is Prague
                 var center = SMap.Coords.fromWGS84(14.41, 50.08);
                 var zoom = 10;
@@ -180,11 +188,11 @@
                 this.markerLayer = new SMap.Layer.Marker();
                 this.map.addLayer(this.markerLayer);
                 this.markerLayer.enable();
-                /*
-                if(loc) {
-                    this.markerLayer.addMarker(new SMap.Marker(center, "userLoc", this.locMarkerOptions));
+                
+                if(loc && showLoc) {
+                    this.updateLocMarker(loc);
                 }
-                */
+                
                 var sync = new SMap.Control.Sync({bottomSpace:0});
                 this.map.addControl(sync);
                 var signals = this.map.getSignals();

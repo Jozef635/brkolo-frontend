@@ -13,14 +13,14 @@
       <detail></detail>
   </v-navigation-drawer>
   <v-toolbar app clipped-right clipped-left fixed dark color="primary">
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>   
+      <v-toolbar-side-icon @click.stop="drawer = !drawer">
+          <v-icon>help_outline</v-icon>
+      </v-toolbar-side-icon>   
       <img style="height:38px" src="../assets/dvojka_title.png" />
       <v-toolbar-title style="width: 400px" class="ml-0 pl-3">
            
           <span class="hidden-sm-and-down">{{ title }}</span></v-toolbar-title>
-      <map-suggest/>
       <v-spacer></v-spacer>
-      <about />
   </v-toolbar>
   <v-content fluid>
     <v-container pa-0 fluid fill-height>
@@ -43,15 +43,11 @@
 <script>
     import Map from './Map.vue';
     import Detail from './Detail.vue';
-    import About from './About.vue';
-    import MapSuggest from './MapSuggest.vue'
     export default {
         name: 'postboxes-frontend',
         components: {
             Map,
             Detail,
-            About,
-            MapSuggest
         },
         data: function () {
             return {

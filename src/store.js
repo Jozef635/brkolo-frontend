@@ -21,7 +21,7 @@ function isActive(e) {
 
 function getNewExtent(e, o) {
    if(!isActive(e)) {
-        // zoomed out - no postboxes are fetched
+        // zoomed out - no markers are fetched
         e.action = 'delete';
         return e;
     }
@@ -29,7 +29,7 @@ function getNewExtent(e, o) {
     // compare with existing extent
     if(e.lat.min >= o.lat.min && e.lat.max <= o.lat.max 
         && e.lon.min >= o.lon.min && e.lon.max <= e.lon.max
-        // if the old extent is inactive, we have to get the postboxes again
+        // if the old extent is inactive, we have to get the markers again
         && isActive(o)) {
             // current view is within the existing extent
             // user either just zoomed in or panned just a little
@@ -51,7 +51,9 @@ function getNewExtent(e, o) {
 export default new Vuex.Store({
     state: {
       extent: { lat: { min: 0, max: 0}, lon: { min: 0, max: 0}},
-      postboxes: [],
+      allMarkers: require('./markers.json'),
+      markers: [],
+      activeMarker: false,
       mapSuggest: [],
       loc: null,
       detail: null,
@@ -59,9 +61,8 @@ export default new Vuex.Store({
       loading: false,
     },
     mutations: {
-      postboxes(state, payload) {
-        state.postboxes = payload.postboxes;
-        //console.dir(payload.postboxes);
+      markers(state, payload) {
+        state.markers = payload.markers;
       },
       extent(state, payload) {
         state.extent = payload.extent;
@@ -80,41 +81,45 @@ export default new Vuex.Store({
       },
       loc(state,payload)  {
           state.loc = payload.loc;
-      }
+      },
+      activeMarker(state,payload)  {
+        state.activeMarker = payload.activeMarker;
+    }
     },
     actions: {
         updateExtent(context, payload) {
             //console.log(`Lat diff: ${payload.extent.lat.max - payload.extent.lat.min} Lon diff: ${payload.extent.lon.max - payload.extent.lon.min}`);
             var e = getNewExtent(payload.extent, context.state.extent);
             if(e && e.action && e.action == 'refresh') {
-                console.log('Store: Getting new postboxes...');
+                console.log('Store: Getting new markers...');
                 context.commit({ type: 'loading', loading: true });
-                Vue.http.get(`https://ygytf5wc4e.execute-api.eu-central-1.amazonaws.com/latest/query/${e.lat.min}/${e.lat.max}/${e.lon.min}/${e.lon.max}/0`)
-                .then(response => {
-                    context.commit({ type: 'postboxes', postboxes: response.body });
-                    context.commit({ type: 'extent', extent: e });
-                }, response => {
-                    console.log('error occured!' + JSON.stringify(response));
-                    context.commit({ type: 'loading', loading: false });
-                });
+                
+               // this simple game does not require database and backend - markers are filtered here using array functions
+               context.commit({ type: 'markers', markers: 
+            context.state.allMarkers.filter(m => { return m.lat >= e.lat.min && m.lat <= e.lat.max 
+                && m.lon >= e.lon.min && m.lon <= e.lon.max }) });
+               context.commit({ type: 'extent', extent: e });
             } else if(e.action == 'delete'){
-                // erase existing postboxes when zoomed out
-                console.log('Store: Delete action triggered on postboxes...');
-                if(context.state.postboxes.length > 0) {
-                    console.log('Store: Deleting existing postboxes.');
-                    context.commit({ type: 'postboxes', postboxes: [] });
+                // erase existing markers when zoomed out
+                console.log('Store: Delete action triggered on markers...');
+                if(context.state.markers.length > 0) {
+                    console.log('Store: Deleting existing markers.');
+                    context.commit({ type: 'markers', markers: [] });
                 }
             }
         },
 
         getDetail (context, payload) {
             var id = payload.id;
+            /*
             Vue.http.get(`https://ygytf5wc4e.execute-api.eu-central-1.amazonaws.com/latest/postboxes/${id}`)
             .then(response => {
                 context.commit({ type: 'detail', detail: response.body });
             }, response => {
                 console.log('error occured!' + JSON.stringify(response));
             });
+            */
+           context.commit({ type: 'detail', detail: context.state.markers.find(e => e.id == id) });
         },
 
         getSuggest (context, payload) {
@@ -138,6 +143,11 @@ export default new Vuex.Store({
         },
 
         changeLoc (context, payload) {
+            var m = context.state.markers.filter(m => { Math.abs(m.lat - payload.loc.lat) < 0.0005 
+                && Math.abs(m.lon - payload.loc.lon) < 0.0005});
+            if(m && m != context.state.activeMarker) {
+                context.commit({ type: 'activeMarker', activeMarker: m });
+            }
             context.commit({ type: 'loc', loc: payload.loc });
         },
 

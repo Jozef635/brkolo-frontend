@@ -16,16 +16,17 @@
             return {
                 frameAdd: require('./map.html'),
                 mp: null,
-                geoloc: null
+                geoloc: null,
+                showLoc: true,
             }
         },
         computed: mapState([
-            'postboxes', 'panorama', 'detail', 'loading', 'loc'
+            'markers', 'panorama', 'detail', 'loading', 'loc', 'activeMarker'
         ]),
         watch: {
-            postboxes: function (newPostboxes, oldPostboxes) {
+            markers: function (newMarkers, oldMarkers) {
                 this.mp.removeMarkers();
-                this.mp.addMarkers(newPostboxes);
+                this.mp.addMarkers(newMarkers);
                 this.$store.dispatch({type: 'endLoading' });
             },
             panorama: function(newP, oldP) {
@@ -36,10 +37,20 @@
                 }
             },
             loc: function(loc) {
+                /*
                 if(loc) {
                     this.mp.setExtent(loc, true);
                 } else {
                     this.mp.removeLocMarker();
+                }
+                */
+               if(loc && this.showLoc && this.mp) {
+                   this.mp.updateLocMarker(loc);
+               }
+            },
+            activeMarker: function(activeMarker, oldMarker) {
+                if(activeMarker) {
+                    alert('close!');
                 }
             }
         },
@@ -47,10 +58,8 @@
             getInfo: function(id) {
                 console.log(id);
                 this.$store.dispatch({type: 'getDetail', id });
-                //this.$emit('show-postbox', postbox);
             },
-            getPostboxes: function(extent) {
-                //console.log(extent);
+            getMarkers: function(extent) {
                 this.$store.dispatch({type: 'updateExtent', extent });
             },
             mapLoadCheck: function() {
@@ -60,10 +69,11 @@
                 if(mapDoc.location.href.indexOf(this.frameAdd) > -1 && mapDoc.readyState  == 'complete' ) {
                    this.$timer.stop('mapLoadCheck');
                    this.mp = mapDoc.MapProxy;
-                   this.mp.extentHandler = this.getPostboxes;
+                   this.mp.extentHandler = this.getMarkers;
                    this.mp.markerClickHandler = this.getInfo;
-                   this.mp.postboxMarkerOptions = { url: require('../assets/map_icon.svg')};
-                   this.mp.loadMap(this.geoloc);
+                   this.mp.poiMarkerOptions = { url: require('../assets/map_icon.svg')};
+                   this.mp.locMarkerOptions = { url: require('../assets/team_icon.svg')};
+                   this.mp.loadMap(this.loc, this.showLoc);
                    console.log('Map handlers mapped to vue methods');
                    
                 } else {
@@ -77,25 +87,28 @@
             },
             hidePanorama() {
                 this.$store.dispatch({type: 'showPanorama', hide: true });
+            },
+            getGeoloc() {
+                if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    var loc = { lat: position.coords.latitude, lon: position.coords.longitude };
+                    if(this.mp && !this.loc) {
+                        this.mp.setExtent(loc, this.showLoc);
+                    }
+                    this.$store.dispatch({type: 'changeLoc', loc: loc });
+                });
+            }
             }
         },
         timers: {
-            mapLoadCheck: { time: 100, autostart: true, immediate: true, repeat: true }
+            mapLoadCheck: { time: 100, autostart: true, immediate: true, repeat: true },
+            getGeoloc: { time: 15000, autostart: true, immediate: true, repeat: true }
         },
         created() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    var loc = { lat: position.coords.latitude, lon: position.coords.longitude };
-                    if(!this.mp) {
-                        this.geoloc = loc;
-                    } else {
-                        this.mp.setExtent(loc);
-                    }
-                });
-            }
+            
         },
         mounted() {
-         }
+        }
     }
 </script>
 <style scoped>

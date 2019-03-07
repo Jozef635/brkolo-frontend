@@ -1,0 +1,62 @@
+[
+    {
+        "id": "z1",
+        "lat": 50.627923996001,
+        "lon": 15.780361092827917,
+        "info": {
+            "title": "T",
+            "question": "Q",
+            "instructions": "I"
+        }
+    },
+    {
+        "id": "z2",
+        "lat": 50.63025741205448,
+        "lon": 15.780212628571682,
+        "info": {
+            "title": "T",
+            "question": "Q",
+            "instructions": "I"
+        }
+    },
+    {
+        "id": "z3",
+        "lat": 50.63439154746107,
+        "lon": 15.782157616462456,
+        "info": {
+            "title": "T",
+            "question": "Q",
+            "instructions": "I"
+        }
+    },
+    {
+        "id": "z4",
+        "lat": 50.63145602190394,
+        "lon": 15.770582152657315,
+        "info": {
+            "title": "T",
+            "question": "Q",
+            "instructions": "I"
+        }
+    },
+    {
+        "id": "z5",
+        "lat": 50.63122990169958,
+        "lon":15.78205946487403,
+        "info": {
+            "title": "T",
+            "question": "Q",
+            "instructions": "I"
+        }
+    },
+    {
+        "id": "z6",
+        "lat": 50.6318925,
+        "lon": 15.7651225,
+        "info": {
+            "title": "Tvlastni",
+            "question": "Q",
+            "instructions": "I"
+        }
+    }
+]
