@@ -128,7 +128,7 @@
                 var center = SMap.Coords.fromWGS84(loc.lon, loc.lat);
                 this.map.setCenterZoom(center, this.zoom);
                 if(showMarker && this.markerLayer) {
-                    updateLocMarker(loc);
+                    this.updateLocMarker(loc);
                 }
             },
 

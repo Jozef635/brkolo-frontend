@@ -1,4 +1,4 @@
-<template>
+<template>      
   <v-flex grow id="mapWindow" xs12 d-flex child-flex p-0 m-0>
       <v-btn color="accent" dark small absolute top right fab v-if="panorama" @click="hidePanorama"><v-icon>close</v-icon></v-btn>
       <iframe v-bind:src="frameAdd" id="mapFrame"/>
@@ -18,10 +18,11 @@
                 mp: null,
                 geoloc: null,
                 showLoc: true,
+                watchId: null,
             }
         },
         computed: mapState([
-            'markers', 'panorama', 'detail', 'loading', 'loc', 'activeMarker'
+            'markers', 'panorama', 'detail', 'loading', 'loc', 'activeMarker', 'locWarnDialog'
         ]),
         watch: {
             markers: function (newMarkers, oldMarkers) {
@@ -88,6 +89,7 @@
             hidePanorama() {
                 this.$store.dispatch({type: 'showPanorama', hide: true });
             },
+            /*
             getGeoloc() {
                 if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
@@ -96,16 +98,27 @@
                         this.mp.setExtent(loc, this.showLoc);
                     }
                     this.$store.dispatch({type: 'changeLoc', loc: loc });
-                }, null, {enableHighAccuracy:true, maximumAge:15000});
+                }, null, {enableHighAccuracy:true, maximumAge:10000});
             }
             },
+            */
         },
         timers: {
             mapLoadCheck: { time: 100, autostart: true, immediate: true, repeat: true },
-            getGeoloc: { time: 15000, autostart: true, immediate: true, repeat: true }
+            /* getGeoloc: { time: 15000, autostart: true, immediate: true, repeat: true } */
         },
         created() {
-            
+            this.watchId = navigator.geolocation.watchPosition(position => {
+                    var loc = { lat: position.coords.latitude, lon: position.coords.longitude };
+                    if(this.mp && !this.loc) {
+                        this.mp.setExtent(loc, this.showLoc);
+                    }
+                    this.$store.dispatch({type: 'changeLoc', loc: loc });
+                }, 
+                () => {
+                    this.$store.commit({ type: 'locWarnDialog', d: true });
+                },
+                { enableHighAccuracy:true, timeout:60000,maximumAge:0});
         },
         mounted() {
         }

@@ -59,6 +59,7 @@ export default new Vuex.Store({
       detail: null,
       panorama: false,
       loading: false,
+      locWarnDialog: false
     },
     mutations: {
       markers(state, payload) {
@@ -84,7 +85,10 @@ export default new Vuex.Store({
       },
       activeMarker(state,payload)  {
         state.activeMarker = payload.activeMarker;
-    }
+      },
+      locWarnDialog(state,payload) {
+        state.locWarnDialog = payload.d;  
+      }
     },
     actions: {
         updateExtent(context, payload) {

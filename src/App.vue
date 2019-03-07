@@ -36,6 +36,18 @@
         </v-flex>
       </v-layout>
     </v-footer>
+    <v-dialog v-model="locWarnDialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Upozornění</v-card-title>
+
+        <v-card-text>
+          Pokud nepovolíte zjišťování polohy, stránka nebude fungovat správně.
+        </v-card-text>
+        <v-card-actions><v-spacer></v-spacer>
+          <v-btn flat="flat" @click="locWarnDialog = false">Chápu</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
    </v-app> 
   </div>
 </template>
@@ -53,7 +65,6 @@
             return {
                 title: 'Brkolo 2019',
                 drawer: true,
-                detail2 : false,
             }
         },
         computed: {
@@ -63,6 +74,14 @@
                 },
                 set (val) {
                     this.$store.commit({ type: 'detail', detail: val });
+                }
+            },
+            locWarnDialog: {
+                get () {
+                    return this.$store.state.locWarnDialog;
+                },
+                set (val) {
+                    this.$store.commit({ type: 'locWarnDialog', d: val });
                 }
             }    
         },
