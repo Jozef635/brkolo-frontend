@@ -48,6 +48,20 @@ function getNewExtent(e, o) {
     return e;
 }
 
+function getGeolocDiff(loc1, loc2) {
+    // https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
+
+    var latMid = (loc1.lat+loc2.lat)/2.0;  // or just use Lat1 for slightly less accurate estimate
+    var m_per_deg_lat = 111132.954 - 559.822 * Math.cos(2.0 * latMid) + 1.175 * Math.cos(4.0 * latMid);
+    var m_per_deg_lon = (Math.PI/180) * 6367449 * Math.cos(latMid);
+
+    var deltaLat = Math.abs(loc1.lat - loc2.lat);
+    var deltaLon = Math.abs(loc1.lon - loc2.lon);
+
+    var dist_m = Math.sqrt (Math.pow(deltaLat * m_per_deg_lat, 2) + Math.pow(deltaLon * m_per_deg_lon, 2));
+    return dist_m;
+}
+
 export default new Vuex.Store({
     state: {
       extent: { lat: { min: 0, max: 0}, lon: { min: 0, max: 0}},
@@ -148,9 +162,14 @@ export default new Vuex.Store({
 
         changeLoc (context, payload) {
             var m = context.state.markers.filter(m => { 
+                /*
                 console.log(`Lat diff: ${Math.abs(m.lat - payload.loc.lat)} Lon diff: ${Math.abs(m.lon - payload.loc.lon)}`);
                 return Math.abs(m.lat - payload.loc.lat) < 0.0005 
                 && Math.abs(m.lon - payload.loc.lon) < 0.0005
+                */
+               var dist = getGeolocDiff(m, payload.loc);
+               console.log(`${m.id} ${dist}`);
+               return dist < 50;
             });
             if(m && m != context.state.activeMarker) {
                 context.commit({ type: 'activeMarker', activeMarker: m });
