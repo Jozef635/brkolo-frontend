@@ -147,8 +147,11 @@ export default new Vuex.Store({
         },
 
         changeLoc (context, payload) {
-            var m = context.state.markers.filter(m => { Math.abs(m.lat - payload.loc.lat) < 0.0005 
-                && Math.abs(m.lon - payload.loc.lon) < 0.0005});
+            var m = context.state.markers.filter(m => { 
+                console.log(`Lat diff: ${Math.abs(m.lat - payload.loc.lat)} Lon diff: ${Math.abs(m.lon - payload.loc.lon)}`);
+                return Math.abs(m.lat - payload.loc.lat) < 0.0005 
+                && Math.abs(m.lon - payload.loc.lon) < 0.0005
+            });
             if(m && m != context.state.activeMarker) {
                 context.commit({ type: 'activeMarker', activeMarker: m });
             }
