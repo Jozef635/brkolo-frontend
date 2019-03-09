@@ -57,6 +57,7 @@
             },
             locMarker: false,
             poiMarkerOptions: {}, 
+            activeMarkerOptions: {},
 
             mapClick: function (signal) {
                 var event = signal.data.event;
@@ -97,7 +98,8 @@
             addMarkers: function(markers) {
                 var t = this;
                 markers.forEach(m => {
-                    var marker = new SMap.Marker(SMap.Coords.fromWGS84(m.lon, m.lat), m.id, t.poiMarkerOptions);
+                    var opts = m.active ? t.activeMarkerOptions : t.poiMarkerOptions;
+                    var marker = new SMap.Marker(SMap.Coords.fromWGS84(m.lon, m.lat), m.id, opts);
                     marker.getContainer()[SMap.LAYER_MARKER].style.cursor = "pointer";
                     t.markerLayer.addMarker(marker);
                 });
@@ -122,6 +124,10 @@
                 } else {
                     this.locMarker.setCoords(SMap.Coords.fromWGS84(loc.lon, loc.lat));
                 }
+            },
+            
+            setMarkerActive: function(id) {
+                this.markerLayer.getMarkers().find(m => m.getId() == id).setURL(this.activeMarkerOptions.url);
             },
 
             setExtent: function(loc, showMarker) {

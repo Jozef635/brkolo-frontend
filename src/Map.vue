@@ -49,11 +49,13 @@
                    this.mp.updateLocMarker(loc);
                }
             },
+            
             activeMarker: function(activeMarker, oldMarker) {
                 if(activeMarker) {
-                    alert('close!');
+                    this.mp.setMarkerActive(activeMarker.id);
                 }
             }
+            
         },
         methods: {
             getInfo: function(id) {
@@ -73,6 +75,7 @@
                    this.mp.extentHandler = this.getMarkers;
                    this.mp.markerClickHandler = this.getInfo;
                    this.mp.poiMarkerOptions = { url: require('../assets/map_icon.svg')};
+                   this.mp.activeMarkerOptions = { url: require('../assets/map_active_icon.svg')};
                    this.mp.locMarkerOptions = { url: require('../assets/team_icon.svg')};
                    this.mp.loadMap(this.loc, this.showLoc);
                    console.log('Map handlers mapped to vue methods');

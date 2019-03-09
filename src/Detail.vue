@@ -16,7 +16,7 @@
             </v-list-tile-action>
           </v-list-tile>
 
-          <v-list-tile v-if="detail.info.instructions">
+          <v-list-tile v-if="detail.active">
             <v-list-tile-action>
               <v-icon color="accent">help_outline</v-icon>
             </v-list-tile-action>
@@ -24,6 +24,16 @@
             <v-list-tile-content>
               <v-list-tile-sub-title>Instrukce</v-list-tile-sub-title>
               <v-list-tile-title>{{ detail.info.instructions }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile v-else>
+            <v-list-tile-action>
+                <v-icon color="accent">location_on</v-icon>
+            </v-list-tile-action>
+
+            <v-list-tile-content>
+              <v-list-tile-title>Tento úkol není aktivní</v-list-tile-title>
+              <v-list-tile-sub-title>Nejdřív navštivte toto místo.</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile> 
         </v-list>
@@ -34,8 +44,8 @@
             </v-list-tile-action>
 
             <v-list-tile-content>
-              <v-list-tile-title>Žádný úkol není aktivní</v-list-tile-title>
-              <v-list-tile-sub-title>Vyberte odemknutý úkol z mapy...</v-list-tile-sub-title>
+              <v-list-tile-title>Není vybrán žádný úkol</v-list-tile-title>
+              <v-list-tile-sub-title>Vyberte úkol z mapy.</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>

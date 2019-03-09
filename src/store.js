@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
@@ -63,6 +64,7 @@ function getGeolocDiff(loc1, loc2) {
 }
 
 export default new Vuex.Store({
+    plugins: [createPersistedState({ paths: ['allMarkers']})],
     state: {
       extent: { lat: { min: 0, max: 0}, lon: { min: 0, max: 0}},
       allMarkers: require('./markers.json'),
@@ -137,7 +139,9 @@ export default new Vuex.Store({
                 console.log('error occured!' + JSON.stringify(response));
             });
             */
-           context.commit({ type: 'detail', detail: context.state.markers.find(e => e.id == id) });
+           var m = context.state.markers.find(e => e.id == id);
+           console.log(`Marker clicked ${m.id}`)
+           context.commit({ type: 'detail', detail: m  });
         },
 
         getSuggest (context, payload) {
@@ -161,7 +165,7 @@ export default new Vuex.Store({
         },
 
         changeLoc (context, payload) {
-            var m = context.state.markers.filter(m => { 
+            var am = context.state.markers.find(m => { 
                 /*
                 console.log(`Lat diff: ${Math.abs(m.lat - payload.loc.lat)} Lon diff: ${Math.abs(m.lon - payload.loc.lon)}`);
                 return Math.abs(m.lat - payload.loc.lat) < 0.0005 
@@ -171,8 +175,15 @@ export default new Vuex.Store({
                console.log(`${m.id} ${dist}`);
                return dist < 50;
             });
-            if(m && m != context.state.activeMarker) {
-                context.commit({ type: 'activeMarker', activeMarker: m });
+            /*
+            if(am && am != context.state.activeMarker) {
+                context.commit({ type: 'activeMarker', activeMarker: am });
+            }
+            */            
+            if(am && !am.active && am != context.state.detail) {
+                am.active = true;
+                context.commit({ type: 'detail', detail: am });
+                context.commit({ type: 'activeMarker', activeMarker: am });
             }
             context.commit({ type: 'loc', loc: payload.loc });
         },
