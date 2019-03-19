@@ -10,14 +10,17 @@ function getDiff(v) {
 }
 
 function isActive(e) {
+    return true;
+    /*
     var latDiff = getDiff(e.lat);
     var lonDiff = getDiff(e.lon);
-   if(latDiff > 0.35 
-    || lonDiff > 0.15) {
+   if(latDiff > 0.70 
+    || lonDiff > 0.30) {
         // zoomed out
         return false;
     }
     return true;
+    */
 }
 
 function getNewExtent(e, o) {
@@ -113,20 +116,21 @@ export default new Vuex.Store({
             if(e && e.action && e.action == 'refresh') {
                 console.log('Store: Getting new markers...');
                 context.commit({ type: 'loading', loading: true });
-                
+                context.commit({ type: 'extent', extent: e });
                // this simple game does not require database and backend - markers are filtered here using array functions
                context.commit({ type: 'markers', markers: 
             context.state.allMarkers.filter(m => { return m.lat >= e.lat.min && m.lat <= e.lat.max 
                 && m.lon >= e.lon.min && m.lon <= e.lon.max }) });
-               context.commit({ type: 'extent', extent: e });
             } else if(e.action == 'delete'){
                 // erase existing markers when zoomed out
                 console.log('Store: Delete action triggered on markers...');
                 if(context.state.markers.length > 0) {
                     console.log('Store: Deleting existing markers.');
                     context.commit({ type: 'markers', markers: [] });
+                    context.commit({ type: 'extent', extent: e });
                 }
             }
+
         },
 
         getDetail (context, payload) {
@@ -180,7 +184,7 @@ export default new Vuex.Store({
                 context.commit({ type: 'activeMarker', activeMarker: am });
             }
             */            
-            if(am && !am.active && am != context.state.detail) {
+            if(am && !am.active /* && am != context.state.detail */) {
                 am.active = true;
                 context.commit({ type: 'detail', detail: am });
                 context.commit({ type: 'activeMarker', activeMarker: am });

@@ -1,62 +1,102 @@
 [
     {
-        "id": "z1",
-        "lat": 50.627923996001,
-        "lon": 15.780361092827917,
+        "id": "pamatnik",
+        "lat": 49.1963936,
+        "lon": 16.6123644,
         "info": {
-            "title": "T",
-            "question": "Q",
-            "instructions": "I"
+            "title": "Úkol 1",
+            "question": "Památník s letopočty",
+            "instructions": "Uveďte součet všech letopočtů uvedených na přední straně památníku."
         }
     },
     {
-        "id": "z2",
-        "lat": 50.63025741205448,
-        "lon": 15.780212628571682,
+        "id": "mikulasek",
+        "lat": 49.2003164,
+        "lon": 16.6062667,
         "info": {
-            "title": "T",
-            "question": "Q",
-            "instructions": "I"
+            "title": "Úkol 2",
+            "question": "Pamětní deska",
+            "instructions": "Kam kouká Oldřich?"
         }
     },
     {
-        "id": "z3",
-        "lat": 50.63439154746107,
-        "lon": 15.782157616462456,
+        "id": "zahrada",
+        "lat": 49.2029942,
+        "lon": 16.6026886,
         "info": {
-            "title": "T",
-            "question": "Q",
-            "instructions": "I"
+            "title": "Úkol 3",
+            "question": "Divná zahrada",
+            "instructions": "Pro koho je určena ta zvláštní zahrádka?"
         }
     },
     {
-        "id": "z4",
-        "lat": 50.63145602190394,
-        "lon": 15.770582152657315,
+        "id": "fons",
+        "lat": 49.1915511,
+        "lon": 16.6047131,
         "info": {
-            "title": "T",
-            "question": "Q",
-            "instructions": "I"
+            "title": "Úkol 4",
+            "question": "Fons Salutis",
+            "instructions": "Jaká zvířata hlídají pramen?"
         }
     },
     {
-        "id": "z5",
-        "lat": 50.63122990169958,
-        "lon":15.78205946487403,
+        "id": "demo",
+        "lat": 49.1986097,
+        "lon": 16.6287594,
         "info": {
-            "title": "T",
-            "question": "Q",
-            "instructions": "I"
+            "title": "Úkol 5",
+            "question": "Památník u vlečky",
+            "instructions": "Jaké je první slovo na třetím řádku nápisu?"
         }
     },
     {
-        "id": "z6",
-        "lat": 50.6318925,
-        "lon": 15.7651225,
+        "id": "kostel",
+        "lat": 49.1927478,
+        "lon": 16.6023583,
         "info": {
-            "title": "Tvlastni",
-            "question": "Q",
-            "instructions": "I"
+            "title": "Úkol 6",
+            "question": "Betlémský kostel",
+            "instructions": "Jaký symbol se nachází (úplně nahoře) nade dveřmi?"
+        }
+    },
+    {
+        "id": "tisnovka",
+        "lat": 49.2068226,
+        "lon": 16.6269297,
+        "info": {
+            "title": "Úkol 7",
+            "question": "Zbytky stavby",
+            "instructions": "Po obou stranách ulice vidíte zválštní konstrukce. Uhodnete, o co se původně jednalo a čemu to sloužilo?"
+        }
+    },
+    {
+        "id": "nasep",
+        "lat": 49.2174714,
+        "lon": 16.5991428,
+        "info": {
+            "title": "Úkol 8",
+            "question": "Násep",
+            "instructions": "Dnes jsou tu pouze stromy. Co tu ale bylo dřív?"
+        }
+    },
+    {
+        "id": "skola",
+        "lat": 49.1895156,
+        "lon": 16.6203397,
+        "info": {
+            "title": "Úkol 9",
+            "question": "Divnopalác",
+            "instructions": "Kolik oken napočítáte v prvním patře na západní straně budovy?"
+        }
+    },
+    {
+        "id": "nahon",
+        "lat": 49.1887371,
+        "lon": 16.6193206,
+        "info": {
+            "title": "Úkol 10",
+            "question": "Mostek",
+            "instructions": "Stojíte na mostku nad umělou odbočkou řeky Svitavy. Jak se takovéto odbočky jmenují?"
         }
     }
 ]

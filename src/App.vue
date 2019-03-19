@@ -3,11 +3,27 @@
 <v-app>
   <v-navigation-drawer class="pa-3" fixed clipped v-model="drawer" app>
       <h2>Vítejte!</h2>
-      <p>Brkolo 2019 co to je</p>
+      <p>Toto je jeden z úkolů hry Brkolo 2019, který vás provede po méně známých zákoutích Brna. Na této stránce najdete mapu s vynačenými
+        místy, která můžete navštívit a získat tak body do celkového hodnocení. Na každém navštíveném místě vás čeká úkol, který musíte splnit
+        (obvykle něco na místě zjistit). Odpovědi zapisujte do papíru, který jste dostali na startu.ˇPapír odevzdáte vyplněný v cíli. 
+        Jednak nám to usnadní vyhodnocování, jednak tak nemůžete zkoušet správnou odpověď tipovat a jednak vám tak můžeme uznat i
+        kreativnější odpovědi, které by stroj nemusel zkousnout. :) Věnujte prosím ještě pozor následujícím pravidlům.
+      </p>
       <h3>Pravidla</h3>
-      <p>Irure laborum sit Lorem do est minim. Nostrud aliquip enim sint sit occaecat reprehenderit exercitation ut aliqua nisi tempor commodo do. Minim dolore eu anim ad adipisicing pariatur. Dolor sunt et mollit ea sunt magna proident minim anim pariatur nostrud.</p>
-      <p>Adipisicing nostrud eu pariatur veniam exercitation minim nisi incididunt nulla nostrud minim. Tempor sunt reprehenderit dolore culpa aliqua ipsum nostrud excepteur sunt nisi minim labore non mollit. Est velit labore nisi ullamco dolore amet mollit ex est. Mollit velit proident minim cillum do esse consectetur in sit. Id proident in anim ullamco labore Lorem ipsum.</p>
-      <p>Consectetur reprehenderit est dolor nisi qui irure tempor sit sint dolore quis anim Lorem. Laboris id incididunt velit minim laboris esse consequat nostrud officia minim qui occaecat eiusmod. Ea ea reprehenderit dolore et sint veniam officia laboris.</p>
+      <p>Stanoviště nemusíte navštívit všechna. Dostanete body za každé, které jste navštívili a odpověděli správně na otázku. Zhodnocení,
+        v jakém pořadí stanoviště navštěvovat, jak to skloubit s ostatními úkoly a jestli se tam vůbec vydávat je čistě na vás.</p>
+        <p>Stanoviště pro splnění úkolu musíte navštívít. Je ZAKÁZÁNO používat Google Street View nebo Seznam Panorama a zkoumat
+          zdrojový kód aplikace.</p>
+      <p>Na mapě byste měli vidět svoji polohu (oranžové panáčky). Stanoviště jsou červená, ve chvíli, kdy se k nim přiblížite, měla by zezelenat.
+        Když vyberete zelené stanoviště na mapě, ukáže se vám zadání úkolu. Úkoly je obvykle třeba řešit na místě stanoviště. Zadání úkolů
+        proto ani nevidíte dříve, než se na stanoviště dostanete.
+      </p>
+      <p>Hra vyžaduje, abyste měli povolena mobilní data (stránka není nijak extrémně náročná na data) a zapnutou GPS. 
+        Webové stránce také musíte povolit, aby směla zjišťovat vaši polohu. Potřebuje to k tomu, aby zobrazovala vaši ikonku na mapě
+        a zpřístupňovala vám úkoly.
+        Předpokládáme, že aspoň jeden z týmu takto vybavený telefon mít bude.
+        Pokud ne, nezbývá vám bohužel nic jiného než oběhnout ostatní stanoviště tak rychle, že ostatní porazíte.</p>
+      <p>V případě technických komplikací můžete zkusit zavolat Adama na 775 397 795.</p>
   </v-navigation-drawer>
   <v-navigation-drawer fixed clipped right app v-model="detail">
       <detail></detail>
@@ -16,7 +32,7 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer">
           <v-icon>help_outline</v-icon>
       </v-toolbar-side-icon>   
-      <img style="height:38px" src="../assets/dvojka_title.png" />
+      <img style="height:38px;" src="../assets/dvojka_title.png" />
       <v-toolbar-title style="width: 400px" class="ml-0 pl-3">
            
           <span class="hidden-sm-and-down">{{ title }}</span></v-toolbar-title>
@@ -56,7 +72,7 @@
     import Map from './Map.vue';
     import Detail from './Detail.vue';
     export default {
-        name: 'postboxes-frontend',
+        name: 'brkolo-frontend',
         components: {
             Map,
             Detail,
