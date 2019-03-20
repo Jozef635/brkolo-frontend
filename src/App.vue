@@ -5,18 +5,18 @@
       <h2>Vítejte!</h2>
       <p>Toto je jeden z úkolů hry Brkolo 2019, který vás provede po méně známých zákoutích Brna. Na této stránce najdete mapu s vynačenými
         místy, která můžete navštívit a získat tak body do celkového hodnocení. Na každém navštíveném místě vás čeká úkol, který musíte splnit
-        (obvykle něco na místě zjistit). Odpovědi zapisujte do papíru, který jste dostali na startu.ˇPapír odevzdáte vyplněný v cíli. 
+        (obvykle něco na místě zjistit). Odpovědi zapisujte do papíru, který jste dostali na startu. Papír odevzdáte vyplněný v cíli. 
         Jednak nám to usnadní vyhodnocování, jednak tak nemůžete zkoušet správnou odpověď tipovat a jednak vám tak můžeme uznat i
-        kreativnější odpovědi, které by stroj nemusel zkousnout. :) Věnujte prosím ještě pozor následujícím pravidlům.
+        kreativnější odpovědi, které by stroj nemusel skousnout. :) Věnujte prosím ještě pozor následujícím pravidlům.
       </p>
       <h3>Pravidla</h3>
       <p>Stanoviště nemusíte navštívit všechna. Dostanete body za každé, které jste navštívili a odpověděli správně na otázku. Zhodnocení,
-        v jakém pořadí stanoviště navštěvovat, jak to skloubit s ostatními úkoly a jestli se tam vůbec vydávat je čistě na vás.</p>
+        v jakém pořadí stanoviště navštěvovat, jak to skloubit s ostatními úkoly, a jestli se tam vůbec vydávat, je čistě na vás.</p>
         <p>Stanoviště pro splnění úkolu musíte navštívít. Je ZAKÁZÁNO používat Google Street View nebo Seznam Panorama a zkoumat
           zdrojový kód aplikace.</p>
-      <p>Na mapě byste měli vidět svoji polohu (oranžové panáčky). Stanoviště jsou červená, ve chvíli, kdy se k nim přiblížite, měla by zezelenat.
+      <p>Na mapě byste měli vidět svoji polohu (oranžové panáčky). Stanoviště jsou červená, ve chvíli, kdy se k nim přiblížite na 50 metrů, měla by zezelenat.
         Když vyberete zelené stanoviště na mapě, ukáže se vám zadání úkolu. Úkoly je obvykle třeba řešit na místě stanoviště. Zadání úkolů
-        proto ani nevidíte dříve, než se na stanoviště dostanete.
+        proto ani nevidíte dříve, než se na stanoviště dostanete. Předání polohy stránce občas chvíli trvá, dejte tomu minutku nebo dvě.
       </p>
       <p>Hra vyžaduje, abyste měli povolena mobilní data (stránka není nijak extrémně náročná na data) a zapnutou GPS. 
         Webové stránce také musíte povolit, aby směla zjišťovat vaši polohu. Potřebuje to k tomu, aby zobrazovala vaši ikonku na mapě
