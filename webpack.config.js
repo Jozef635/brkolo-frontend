@@ -1,12 +1,15 @@
 'use strict'
 
 const path = require('path');
+const webpack = require('webpack');
 
 const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const PrerenderSpaPlugin = require('prerender-spa-plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 const Renderer = PrerenderSpaPlugin.PuppeteerRenderer;
+
+const markers = require('./src/markers.json');
 
 module.exports = {
   entry: './src/index.js',
@@ -76,6 +79,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      // https://git.coolaj86.com/coolaj86/btoa.js/src/branch/master/index.js
+      "MARKERS": JSON.stringify(Buffer.from(encodeURIComponent(JSON.stringify(markers)), 'binary').toString('base64')),
+    }),
     new VueLoaderPlugin(),
     new VuetifyLoaderPlugin(),
     //new HotModuleReplacementPlugin(),

@@ -32,7 +32,7 @@
       <v-toolbar-side-icon @click.stop="drawer = !drawer">
           <v-icon>help_outline</v-icon>
       </v-toolbar-side-icon>   
-      <img style="height:38px;" src="../assets/dvojka_title.png" />
+      <img style="height:38px;" src="../assets/title.png" />
       <v-toolbar-title style="width: 400px" class="ml-0 pl-3">
            
           <span class="hidden-sm-and-down">{{ title }}</span></v-toolbar-title>
