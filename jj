@@ -1,0 +1,1066 @@
+<template>
+  <div id="app">
+<v-app>
+  <v-navigation-drawer class="pa-3" fixed clipped v-model="drawer" app>
+      <h2>Vítejte!</h2>
+      <p>Toto je jeden z úkolů hry Brkolo 2019, který vás provede po méně známých zákoutích Brna. Na této stránce najdete mapu s vynačenými
+        místy, která můžete navštívit a získat tak body do celkového hodnocení. Na každém navštíveném místě vás čeká úkol, který musíte splnit
+        (obvykle něco na místě zjistit). Odpovědi zapisujte do papíru, který jste dostali na startu. Papír odevzdáte vyplněný v cíli. 
+        Jednak nám to usnadní vyhodnocování, jednak tak nemůžete zkoušet správnou odpověď tipovat a jednak vám tak můžeme uznat i
+        kreativnější odpovědi, které by stroj nemusel skousnout. :) Věnujte prosím ještě pozor následujícím pravidlům.
+      </p>
+      <h3>Pravidla</h3>
+      <p>Stanoviště nemusíte navštívit všechna. Dostanete body za každé, které jste navštívili a odpověděli správně na otázku. Zhodnocení,
+        v jakém pořadí stanoviště navštěvovat, jak to skloubit s ostatními úkoly, a jestli se tam vůbec vydávat, je čistě na vás.</p>
+        <p>Stanoviště pro splnění úkolu musíte navštívít. Je ZAKÁZÁNO používat Google Street View nebo Seznam Panorama a zkoumat
+          zdrojový kód aplikace.</p>
+      <p>Na mapě byste měli vidět svoji polohu (oranžové panáčky). Stanoviště jsou červená, ve chvíli, kdy se k nim přiblížite na 50 metrů, měla by zezelenat.
+        Když vyberete zelené stanoviště na mapě, ukáže se vám zadání úkolu. Úkoly je obvykle třeba řešit na místě stanoviště. Zadání úkolů
+        proto ani nevidíte dříve, než se na stanoviště dostanete. Předání polohy stránce občas chvíli trvá, dejte tomu minutku nebo dvě.
+      </p>
+      <p>Hra vyžaduje, abyste měli povolena mobilní data (stránka není nijak extrémně náročná na data) a zapnutou GPS. 
+        Webové stránce také musíte povolit, aby směla zjišťovat vaši polohu. Potřebuje to k tomu, aby zobrazovala vaši ikonku na mapě
+        a zpřístupňovala vám úkoly.
+        Předpokládáme, že aspoň jeden z týmu takto vybavený telefon mít bude.
+        Pokud ne, nezbývá vám bohužel nic jiného než oběhnout ostatní stanoviště tak rychle, že ostatní porazíte.</p>
+      <p>V případě technických komplikací můžete zkusit zavolat Adama na 775 397 795.</p>
+  </v-navigation-drawer>
+  <v-navigation-drawer fixed clipped right app v-model="detail">
+      <detail></detail>
+  </v-navigation-drawer>
+  <v-toolbar app clipped-right clipped-left fixed dark color="primary">
+      <v-toolbar-side-icon @click.stop="drawer = !drawer">
+          <v-icon>help_outline</v-icon>
+      </v-toolbar-side-icon>   
+      <img style="height:38px;" src="../assets/title.png" />
+      <v-toolbar-title style="width: 400px" class="ml-0 pl-3">
+           
+          <span class="hidden-sm-and-down">{{ title }}</span></v-toolbar-title>
+      <v-spacer></v-spacer>
+  </v-toolbar>
+  <v-content fluid>
+    <v-container pa-0 fluid fill-height>
+      <v-layout fill-height column>
+      <Map />
+      </v-layout>
+    </v-container>
+  </v-content>
+  <v-footer app color="secondary">
+      <v-layout justify-center row wrap>
+        <v-flex secondary pa-2 text-xs-center xs12>
+            &copy;2019, <a href="https://nastojte.cz">Adam Kučera</a>
+        </v-flex>
+      </v-layout>
+    </v-footer>
+    <v-dialog v-model="locWarnDialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Upozornění</v-card-title>
+
+        <v-card-text>
+          Pokud nepovolíte zjišťování polohy, stránka nebude fungovat správně.
+        </v-card-text>
+        <v-card-actions><v-spacer></v-spacer>
+          <v-btn flat="flat" @click="locWarnDialog = false">Chápu</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+   </v-app> 
+  </div>
+</template>
+
+<script>
+    import Map from './Map.vue';
+    import Detail from './Detail.vue';
+    export default {
+        name: 'brkolo-frontend',
+        components: {
+            Map,
+            Detail,
+        },
+        data: function () {
+            return {
+                title: 'Brkolo 2019',
+                drawer: true,
+            }
+        },
+        computed: {
+            detail: {
+                get () {
+                    return this.$store.state.detail;
+                },
+                set (val) {
+                    this.$store.commit({ type: 'detail', detail: val });
+                }
+            },
+            locWarnDialog: {
+                get () {
+                    return this.$store.state.locWarnDialog;
+                },
+                set (val) {
+                    this.$store.commit({ type: 'locWarnDialog', d: val });
+                }
+            }    
+        },
+        methods: {
+        },
+        created() {
+         }
+    }
+</script>
+<style scoped>
+</style>
+<template>
+  <div id="menu">
+  </div>
+</template>
+
+<script>
+    
+    export default {
+        name: 'Menu',
+        components: {
+        },
+        props: [],
+        data: function () {
+            return {
+                
+            }
+        },
+        computed: {
+                
+        },
+        methods: {
+            
+        },
+        timers: {
+        },
+        created() {
+
+        },
+        mounted() {
+         }
+    }
+</script>
+<style scoped>
+
+</style>
+<template>
+    <v-scroll-x-transition mode="out-in">
+        <!--
+        <v-list three-line v-if="detail && detail.id" :key="detail.id">
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-icon color="accent">location_on</v-icon>
+            </v-list-tile-action>
+
+            <v-list-tile-content>
+              <v-list-tile-sub-title>{{ detail.info.title }}</v-list-tile-sub-title>
+              <v-list-tile-title>{{ detail.info.question }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile v-if="detail.active">
+            <v-list-tile-action>
+              <v-icon color="accent">help_outline</v-icon>
+            </v-list-tile-action>
+
+            <v-list-tile-content>
+              <v-list-tile-title>Instrukce</v-list-tile-title>
+              <v-list-tile-sub-title>{{ detail.info.instructions }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-list-tile v-else>
+            <v-list-tile-action>
+                <v-icon color="accent">location_on</v-icon>
+            </v-list-tile-action>
+
+            <v-list-tile-content>
+              <v-list-tile-title>Tento úkol není aktivní</v-list-tile-title>
+              <v-list-tile-sub-title>Nejdřív navštivte toto místo.</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile> 
+        </v-list>
+        <v-list two-lines v-else key="placeholder">
+          <v-list-tile>
+            <v-list-tile-action>
+                <v-icon color="accent">location_on</v-icon>
+            </v-list-tile-action>
+
+            <v-list-tile-content>
+              <v-list-tile-title>Není vybrán žádný úkol</v-list-tile-title>
+              <v-list-tile-sub-title>Vyberte úkol z mapy.</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+        -->
+        <v-card flat v-if="detail && detail.id" :key="detail.id">
+          <v-card-title><v-icon large left color="accent">location_on</v-icon>
+          <span class="title font-weight-light">{{ detail.info.question }}</span><br>
+          <!--
+          <span class="grey--text font-weight-light">{{ detail.info.title }}</span>
+          -->
+          </v-card-title>
+          <v-card-text>
+          <!-- <v-icon color="accent">help_outline</v-icon> -->
+          <span v-if="detail.active">
+          {{ detail.info.instructions }}  
+          </span>
+          <span v-else>
+            Tento úkol není aktivní. Nejdřív navštivte toto místo.
+          </span>  
+          </v-card-text>         
+        </v-card>
+        <v-list two-lines v-else key="placeholder">
+          <v-list-tile>
+            <v-list-tile-action>
+                <v-icon color="accent">location_on</v-icon>
+            </v-list-tile-action>
+
+            <v-list-tile-content>
+              <v-list-tile-title>Není vybrán žádný úkol</v-list-tile-title>
+              <v-list-tile-sub-title>Vyberte úkol z mapy.</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+
+        </v-scroll-x-transition>
+        
+</template>
+
+<script>
+    
+    export default {
+        name: 'Detail',
+        components: {
+        },
+        props: [],
+        data: function () {
+            return {
+                
+            }
+        },
+        computed: {
+            detail () {
+                return this.$store.state.detail;
+            },
+
+        },
+        methods: {
+            showPhoto () {
+                this.$store.dispatch({type: 'showPanorama' });
+            }
+        },
+        timers: {
+        },
+        created() {
+
+        },
+        mounted() {
+         }
+    }
+</script>
+<style scoped>
+
+</style>
+<!doctype html>
+<html>
+  <head>
+    <title>Mestská hra</title>
+
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <meta name="description" content="Úlohy pre hru 2023">
+      <meta name="keywords" content="mestská hra, Humenné">
+      <meta name="author" content="Jozef">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  </head>
+  <body>
+    <div id="app">
+    </div>
+  </body>
+</html>
+import './style.css';
+import '../assets/favicon.ico';
+//import 'vuetify/dist/vuetify.min.css';
+// a la carte support
+import 'vuetify/src/stylus/app.styl';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
+import colors from 'vuetify/es5/util/colors';
+
+
+import Vue from 'vue';
+import App from './App.vue';
+import store from './store'
+
+import VueResource from 'vue-resource';
+import VueTimers from 'vue-timers';
+//import Vuetify from 'vuetify';
+// a la carte support
+import Vuetify from 'vuetify/lib';
+
+Vue.use(VueResource);
+Vue.use(VueTimers);
+Vue.use(Vuetify, {
+  theme: {
+    primary: colors.green.darken2,
+    secondary: colors.yellow.darken2,
+    accent: colors.deepOrange.accent4
+  }
+});
+
+var app = new Vue({
+  el: '#app',
+  store,
+  render: h => h(App),
+    mounted () {
+    document.dispatchEvent(new Event('render-event'));
+  }
+});
+
+<!doctype html>
+
+<html lang="cs">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Map window</title>
+    <meta name="description" content="Map window">
+    <meta name="author" content="Adam Kučera">
+
+    <script src="https://api.mapy.cz/loader.js"></script>
+    <script>
+        Loader.load(null, {suggest: true, pano: true});
+    </script>
+    <style>
+    html, body {
+        height: 100%;
+        margin: 0; 
+        padding: 0;  /* to avoid scrollbars */
+    }
+
+    #wrapper {
+        display: flex;  /* use the flex model */
+        min-height: 100%;
+        flex-direction: column;
+        margin: 0; 
+        padding: 0;
+    }
+
+    .invisible {        
+        display: none;
+    }
+
+    .visible {
+        flex: 1 1 auto;
+        margin: 0; 
+        padding: 0;
+    }
+
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+    <div id="panorama" class="invisible"></div>
+    <div id="map" class="visible"></div>
+    </div>
+    <script>
+        var MapProxy = {
+            map: null,
+            markerLayer: null,
+            panoramaScene: null,
+            zoom: 14,
+            locMarkerOptions: {
+                url: SMap.CONFIG.img+"/marker/drop-red.png"
+            },
+            locMarker: false,
+            poiMarkerOptions: {}, 
+            activeMarkerOptions: {},
+
+            mapClick: function (signal) {
+                var event = signal.data.event;
+                var coords = SMap.Coords.fromEvent(event, this.MapProxy.map);
+                if (this.MapProxy.clickHandler) {
+                    this.clickHandler(coords);
+                }
+            },
+            getExtent: function() {
+                var vp = this.map.getViewport();
+                //console.log(map.getZoom());
+                return {
+                    lon: { min: Math.min(vp.lbx, vp.rtx), max: Math.max(vp.lbx, vp.rtx) },
+                    lat: { min: Math.min(vp.lby, vp.rty), max: Math.max(vp.lby, vp.rty) },
+                };
+            },
+            changeExtent: function () {
+                if (this.MapProxy.extentHandler) {
+                    this.MapProxy.extentHandler(this.MapProxy.getExtent());
+                }
+            },
+            markerClick: function (signal) {
+                var marker = signal.target;
+                var id = marker.getId();
+                if(id == 'userLoc') {
+                    return;
+                }
+                if (this.MapProxy.markerClickHandler) {
+                    this.MapProxy.markerClickHandler(id);
+                }
+            },
+
+            removeMarkers: function() {
+                this.markerLayer.removeAll();
+                this.addLocMarker();
+            },
+
+            addMarkers: function(markers) {
+                var t = this;
+                markers.forEach(m => {
+                    var opts = m.active ? t.activeMarkerOptions : t.poiMarkerOptions;
+                    var marker = new SMap.Marker(SMap.Coords.fromWGS84(m.lon, m.lat), m.id, opts);
+                    marker.getContainer()[SMap.LAYER_MARKER].style.cursor = "pointer";
+                    t.markerLayer.addMarker(marker);
+                });
+            },
+
+            addLocMarker: function() {
+                if(this.locMarker) {
+                    this.markerLayer.addMarker(this.locMarker);
+                }
+            },
+
+            removeLocMarker: function() {
+                this.markerLayer.removeMarker(this.locMarker);
+                this.locMarker = null;
+                
+            },
+            
+            updateLocMarker: function(loc) {
+                if(!this.locMarker) {
+                    this.locMarker = new SMap.Marker(SMap.Coords.fromWGS84(loc.lon, loc.lat), 'loc', this.locMarkerOptions);
+                    this.addLocMarker();
+                } else {
+                    this.locMarker.setCoords(SMap.Coords.fromWGS84(loc.lon, loc.lat));
+                }
+            },
+            
+            setMarkerActive: function(id) {
+                this.markerLayer.getMarkers().find(m => m.getId() == id).setURL(this.activeMarkerOptions.url);
+            },
+
+            setExtent: function(loc, showMarker) {
+                var center = SMap.Coords.fromWGS84(loc.lon, loc.lat);
+                this.map.setCenterZoom(center, this.zoom);
+                if(showMarker && this.markerLayer) {
+                    this.updateLocMarker(loc);
+                }
+            },
+
+            toggleVisible: function(el, visible) {
+                var a = 'visible';
+                var b = 'in' + a; 
+                if(!visible) {
+                    b = a;
+                    a = 'in' + b; 
+                }
+                el.classList.add(a);
+                el.classList.remove(b);
+            },
+
+            showPanorama: function(loc) {
+                var t = this;
+                return new Promise(function(resolve) {
+                t.toggleVisible(document.querySelector('#map'), false);
+                var el = document.querySelector('#panorama');
+                t.toggleVisible(el, true);
+                if(!t.panoramaScene) {
+                    t.panoramaScene = new SMap.Pano.Scene(el);
+                }
+                // kolem teto pozice chceme nejblizsi panorama
+                var position = SMap.Coords.fromWGS84(loc.lon, loc.lat);
+                SMap.Pano.getBest(position, 50).then(function(place) {
+                    t.panoramaScene.show(place);
+                    resolve(true);
+                }, function() {
+                    resolve(false);
+                });
+            });
+            },
+
+            hidePanorama: function() {
+                this.toggleVisible(document.querySelector('#map'), true);
+                this.toggleVisible(document.querySelector('#panorama'), false);
+            },
+            
+            clickHandler: null,
+            extentHandler: null,
+            markerClickHandler: null,
+
+            loadMap: function(loc, showLoc) {
+                // default is Prague
+                var center = SMap.Coords.fromWGS84(14.41, 50.08);
+                var zoom = 10;
+                if(loc) {
+                    center = SMap.Coords.fromWGS84(loc.lon, loc.lat);
+                    zoom = this.zoom;
+                }
+                this.map = new SMap(JAK.gel("map"), center, zoom);
+                this.map.addDefaultControls();
+                var mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM);
+                this.map.addControl(mouse); 
+                this.map.addDefaultLayer(SMap.DEF_BASE).enable();
+                this.markerLayer = new SMap.Layer.Marker();
+                this.map.addLayer(this.markerLayer);
+                this.markerLayer.enable();
+                
+                if(loc && showLoc) {
+                    this.updateLocMarker(loc);
+                }
+                
+                var sync = new SMap.Control.Sync({bottomSpace:0});
+                this.map.addControl(sync);
+                var signals = this.map.getSignals();
+                signals.addListener(window, "map-click", this.mapClick);
+                signals.addListener(window, "marker-click", this.markerClick);
+                signals.addListener(window, "map-redraw", this.changeExtent);
+                // sends event to the Vue - loads the first postboxes
+                if (this.extentHandler) {
+                    this.extentHandler(this.getExtent());
+                }
+            }
+        };
+        document.MapProxy = MapProxy;
+    </script>
+</body>
+
+</html>
+<template>      
+  <v-flex grow id="mapWindow" xs12 d-flex child-flex p-0 m-0>
+      <v-btn color="accent" dark small absolute top right fab v-if="panorama" @click="hidePanorama"><v-icon>close</v-icon></v-btn>
+      <iframe v-bind:src="frameAdd" id="mapFrame"/>
+      <!-- <v-progress-linear :indeterminate="true" height="2" v-if="loading"></v-progress-linear> -->
+  </v-flex>
+</template>
+
+<script>
+    import { mapState } from 'vuex';
+    export default {
+        name: 'MapWindow',
+        components: {
+        },
+        data: function () {
+            return {
+                frameAdd: require('./map.html'),
+                mp: null,
+                geoloc: null,
+                showLoc: true,
+                watchId: null,
+            }
+        },
+        computed: mapState([
+            'markers', 'panorama', 'detail', 'loading', 'loc', 'activeMarker', 'locWarnDialog'
+        ]),
+        watch: {
+            markers: function (newMarkers, oldMarkers) {
+                this.mp.removeMarkers();
+                this.mp.addMarkers(newMarkers);
+                this.$store.dispatch({type: 'endLoading' });
+            },
+            panorama: function(newP, oldP) {
+                if(newP) {
+                    this.mp.showPanorama({ lat: this.detail.lat, lon: this.detail.lon});
+                } else {
+                    this.mp.hidePanorama();
+                }
+            },
+            loc: function(loc) {
+                /*
+                if(loc) {
+                    this.mp.setExtent(loc, true);
+                } else {
+                    this.mp.removeLocMarker();
+                }
+                */
+               if(loc && this.showLoc && this.mp) {
+                   this.mp.updateLocMarker(loc);
+               }
+            },
+            
+            activeMarker: function(activeMarker, oldMarker) {
+                if(activeMarker) {
+                    this.mp.setMarkerActive(activeMarker.id);
+                }
+            }
+            
+        },
+        methods: {
+            getInfo: function(id) {
+                console.log(id);
+                this.$store.dispatch({type: 'getDetail', id });
+            },
+            getMarkers: function(extent) {
+                this.$store.dispatch({type: 'updateExtent', extent });
+            },
+            mapLoadCheck: function() {
+                // https://stackoverflow.com/questions/9249680/how-to-check-if-iframe-is-loaded-or-it-has-a-content
+                var iframe = document.getElementById("mapFrame");
+                var mapDoc = (iframe.contentWindow.document || iframe.contentDocument);
+                if(mapDoc.location.href.indexOf(this.frameAdd) > -1 && mapDoc.readyState  == 'complete' ) {
+                   this.$timer.stop('mapLoadCheck');
+                   this.mp = mapDoc.MapProxy;
+                   this.mp.extentHandler = this.getMarkers;
+                   this.mp.markerClickHandler = this.getInfo;
+                   this.mp.poiMarkerOptions = { url: require('../assets/map_icon.svg')};
+                   this.mp.activeMarkerOptions = { url: require('../assets/map_active_icon.svg')};
+                   this.mp.locMarkerOptions = { url: require('../assets/team_icon.svg')};
+                   this.mp.loadMap(this.loc, this.showLoc);
+                   console.log('Map handlers mapped to vue methods');
+                   
+                } else {
+                    /*
+                    console.log('Iframe location is:');
+                    console.log(mapDoc.location.href);
+                    console.log('Iframe readysttate is:');
+                    console.log(mapDoc.readyState);
+                    */
+                }
+            },
+            hidePanorama() {
+                this.$store.dispatch({type: 'showPanorama', hide: true });
+            },
+            /*
+            getGeoloc() {
+                if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    var loc = { lat: position.coords.latitude, lon: position.coords.longitude };
+                    if(this.mp && !this.loc) {
+                        this.mp.setExtent(loc, this.showLoc);
+                    }
+                    this.$store.dispatch({type: 'changeLoc', loc: loc });
+                }, null, {enableHighAccuracy:true, maximumAge:10000});
+            }
+            },
+            */
+        },
+        timers: {
+            mapLoadCheck: { time: 100, autostart: true, immediate: true, repeat: true },
+            /* getGeoloc: { time: 15000, autostart: true, immediate: true, repeat: true } */
+        },
+        created() {
+            this.watchId = navigator.geolocation.watchPosition(position => {
+                    var loc = { lat: position.coords.latitude, lon: position.coords.longitude };
+                    if(this.mp && !this.loc) {
+                        this.mp.setExtent(loc, this.showLoc);
+                    }
+                    this.$store.dispatch({type: 'changeLoc', loc: loc });
+                }, 
+                () => {
+                    this.$store.commit({ type: 'locWarnDialog', d: true });
+                },
+                { enableHighAccuracy:true, timeout:60000,maximumAge:0});
+        },
+        mounted() {
+        }
+    }
+</script>
+<style scoped>
+#mapFrame {
+    flex: 1 1 auto;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+}
+</style>
+<template>
+  <!--
+  <v-text-field
+        flat
+        solo-inverted
+        prepend-icon="search"
+        label="Hledat"
+        class="hidden-sm-and-down"
+        id="search"
+      ></v-text-field>
+    -->
+    <v-autocomplete
+    hint="Hledat"
+    flat
+    solo-inverted
+    prepend-icon="search"
+    append-icon="clear"
+    hide-no-data
+    return-object
+    :loading="loading"
+    :search-input.sync="search"
+    :items="items"
+    v-model="model"
+    @input="changeLoc"
+    @click:append="clearLoc">
+
+    </v-autocomplete>
+</template>
+
+<script>
+    import { mapState } from 'vuex';
+    export default {
+        name: 'MapSuggest',
+        components: {
+        },
+        props: [],
+        data: function () {
+            return {
+                search: null,
+                model: null
+            }
+        },
+        watch: {
+            search(val) {
+                console.log('Input changed...');
+                if(!val || val.length < 3) {
+                    return;
+                }
+                if(this.loading) {
+                    return;
+                }
+                console.log('Suggest fetch started...');
+                // do the fetch from store... run the action
+                this.$store.dispatch({type: 'getSuggest', input: val});
+            }
+        },
+        computed: mapState({
+             items: state => state.mapSuggest,
+             loading: state => state.loading
+             }),
+        methods: {
+            changeLoc(event) {
+                //console.dir(this.model);
+                this.$store.dispatch({type: 'showPanorama', hide: true});
+                this.$store.dispatch({type: 'changeLoc', loc: event.value});
+            },
+            clearLoc(event) {
+                this.model = null;
+                this.$store.dispatch({type: 'changeLoc', loc: null});
+            }
+        },
+        timers: {
+        },
+        created() {
+
+        },
+        mounted() {
+         }
+    }
+</script>
+<style scoped>
+
+</style>
+[
+    {
+        "id": "sdb",
+        "lat": 48.933029,
+        "lon": 21.906694,
+        "info": {
+            "title": "Úkol 1",
+            "question": "Památník s letopočty",
+            "instructions": "Uveďte součet všech letopočtů uvedených na přední straně památníku."
+        }
+    },
+    {
+        "id": "Havana",
+        "lat": 48.937109,
+        "lon": 21.910308,
+        "info": {
+            "title": "Úkol 2",
+            "question": "Pamětní deska",
+            "instructions": "Kam kouká Oldřich?"
+        }
+    },
+    {
+        "id": "zahrada",
+        "lat": 49.2029942,
+        "lon": 16.6026886,
+        "info": {
+            "title": "Úkol 3",
+            "question": "Divná zahrada",
+            "instructions": "Pro koho je určena ta zvláštní zahrádka?"
+        }
+    },
+    {
+        "id": "fons",
+        "lat": 49.1915511,
+        "lon": 16.6047131,
+        "info": {
+            "title": "Úkol 4",
+            "question": "Fons Salutis",
+            "instructions": "Jaká zvířata hlídají pramen?"
+        }
+    },
+    {
+        "id": "demo",
+        "lat": 49.1986097,
+        "lon": 16.6287594,
+        "info": {
+            "title": "Úkol 5",
+            "question": "Památník u vlečky",
+            "instructions": "Jaké je první slovo na třetím řádku nápisu?"
+        }
+    },
+    {
+        "id": "kostel",
+        "lat": 49.1927478,
+        "lon": 16.6023583,
+        "info": {
+            "title": "Úkol 6",
+            "question": "Betlémský kostel",
+            "instructions": "Jaký symbol se nachází (úplně nahoře) nade dveřmi?"
+        }
+    },
+    {
+        "id": "tisnovka",
+        "lat": 49.2068226,
+        "lon": 16.6269297,
+        "info": {
+            "title": "Úkol 7",
+            "question": "Zbytky stavby",
+            "instructions": "Po obou stranách ulice vidíte zválštní konstrukce. Uhodnete, o co se původně jednalo a čemu to sloužilo?"
+        }
+    },
+    {
+        "id": "nasep",
+        "lat": 49.2174714,
+        "lon": 16.5991428,
+        "info": {
+            "title": "Úkol 8",
+            "question": "Násep",
+            "instructions": "Dnes jsou tu pouze stromy. Co tu ale bylo dřív?"
+        }
+    },
+    {
+        "id": "skola",
+        "lat": 49.1895156,
+        "lon": 16.6203397,
+        "info": {
+            "title": "Úkol 9",
+            "question": "Divnopalác",
+            "instructions": "Kolik oken napočítáte v prvním patře na západní straně budovy?"
+        }
+    },
+    {
+        "id": "nahon",
+        "lat": 49.1887371,
+        "lon": 16.6193206,
+        "info": {
+            "title": "Úkol 10",
+            "question": "Mostek",
+            "instructions": "Stojíte na mostku nad umělou odbočkou řeky Svitavy. Jak se takovéto odbočky jmenují?"
+        }
+    }
+]
+import Vue from 'vue';
+import Vuex from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
+
+Vue.use(Vuex);
+
+
+function getDiff(v) {
+    return v.max - v.min;
+}
+
+function isActive(e) {
+    return true;
+    /*
+    var latDiff = getDiff(e.lat);
+    var lonDiff = getDiff(e.lon);
+   if(latDiff > 0.70 
+    || lonDiff > 0.30) {
+        // zoomed out
+        return false;
+    }
+    return true;
+    */
+}
+
+function getNewExtent(e, o) {
+   if(!isActive(e)) {
+        // zoomed out - no markers are fetched
+        e.action = 'delete';
+        return e;
+    }
+    
+    // compare with existing extent
+    if(e.lat.min >= o.lat.min && e.lat.max <= o.lat.max 
+        && e.lon.min >= o.lon.min && e.lon.max <= e.lon.max
+        // if the old extent is inactive, we have to get the markers again
+        && isActive(o)) {
+            // current view is within the existing extent
+            // user either just zoomed in or panned just a little
+            //e.action = 'none';
+            return false;
+        }
+
+    // we have a new extent - we will expand it a bit to prevent frequent requests when panning the map just a little bit
+    var latDiff = getDiff(e.lat);
+    var lonDiff = getDiff(e.lon);
+    e.lat.min -= latDiff / 4;
+    e.lat.max += latDiff / 4;
+    e.lon.min -= lonDiff / 4;
+    e.lon.max += lonDiff / 4;
+    e.action = 'refresh';
+    return e;
+}
+
+function getGeolocDiff(loc1, loc2) {
+    // https://stackoverflow.com/questions/639695/how-to-convert-latitude-or-longitude-to-meters
+
+    var latMid = (loc1.lat+loc2.lat)/2.0;  // or just use Lat1 for slightly less accurate estimate
+    var m_per_deg_lat = 111132.954 - 559.822 * Math.cos(2.0 * latMid) + 1.175 * Math.cos(4.0 * latMid);
+    var m_per_deg_lon = (Math.PI/180) * 6367449 * Math.cos(latMid);
+
+    var deltaLat = Math.abs(loc1.lat - loc2.lat);
+    var deltaLon = Math.abs(loc1.lon - loc2.lon);
+
+    var dist_m = Math.sqrt (Math.pow(deltaLat * m_per_deg_lat, 2) + Math.pow(deltaLon * m_per_deg_lon, 2));
+    return dist_m;
+}
+
+export default new Vuex.Store({
+    plugins: [createPersistedState({ paths: ['allMarkers']})],
+    state: {
+      extent: { lat: { min: 0, max: 0}, lon: { min: 0, max: 0}},
+      //allMarkers: require('./markers.json'),
+      allMarkers: JSON.parse(decodeURIComponent(atob(MARKERS))),
+      markers: [],
+      activeMarker: false,
+      mapSuggest: [],
+      loc: null,
+      detail: null,
+      panorama: false,
+      loading: false,
+      locWarnDialog: false
+    },
+    mutations: {
+      markers(state, payload) {
+        state.markers = payload.markers;
+      },
+      extent(state, payload) {
+        state.extent = payload.extent;
+      },
+      detail(state, payload) {
+          state.detail = payload.detail;
+      },
+      panorama(state, payload) {
+          state.panorama = payload.panorama;
+      },
+      loading(state, payload) {
+          state.loading = payload.loading;
+      },
+      suggests(state, payload) {
+          state.mapSuggest = payload.suggests;
+      },
+      loc(state,payload)  {
+          state.loc = payload.loc;
+      },
+      activeMarker(state,payload)  {
+        state.activeMarker = payload.activeMarker;
+      },
+      locWarnDialog(state,payload) {
+        state.locWarnDialog = payload.d;  
+      }
+    },
+    actions: {
+        updateExtent(context, payload) {
+            //console.log(`Lat diff: ${payload.extent.lat.max - payload.extent.lat.min} Lon diff: ${payload.extent.lon.max - payload.extent.lon.min}`);
+            var e = getNewExtent(payload.extent, context.state.extent);
+            if(e && e.action && e.action == 'refresh') {
+                console.log('Store: Getting new markers...');
+                context.commit({ type: 'loading', loading: true });
+                context.commit({ type: 'extent', extent: e });
+               // this simple game does not require database and backend - markers are filtered here using array functions
+               context.commit({ type: 'markers', markers: 
+            context.state.allMarkers.filter(m => { return m.lat >= e.lat.min && m.lat <= e.lat.max 
+                && m.lon >= e.lon.min && m.lon <= e.lon.max }) });
+            } else if(e.action == 'delete'){
+                // erase existing markers when zoomed out
+                console.log('Store: Delete action triggered on markers...');
+                if(context.state.markers.length > 0) {
+                    console.log('Store: Deleting existing markers.');
+                    context.commit({ type: 'markers', markers: [] });
+                    context.commit({ type: 'extent', extent: e });
+                }
+            }
+
+        },
+
+        getDetail (context, payload) {
+            var id = payload.id;
+            /*
+            Vue.http.get(`https://ygytf5wc4e.execute-api.eu-central-1.amazonaws.com/latest/postboxes/${id}`)
+            .then(response => {
+                context.commit({ type: 'detail', detail: response.body });
+            }, response => {
+                console.log('error occured!' + JSON.stringify(response));
+            });
+            */
+           var m = context.state.markers.find(e => e.id == id);
+           console.log(`Marker clicked ${m.id}`)
+           context.commit({ type: 'detail', detail: m  });
+        },
+
+        getSuggest (context, payload) {
+            var input = payload.input;
+            context.commit({ type: 'loading', loading: true });
+            Vue.http.get(`https://api.mapy.cz/suggest/?count=5&phrase=${input}`)
+            .then(response => {
+                var s = response.body.result.map(i => { 
+                    return {
+                       //key: i.userData.id,
+                       text: i.userData.suggestFirstRow + ', ' + i.userData.suggestSecondRow,
+                       value: { lat: i.userData.latitude, lon: i.userData.longitude }
+                    };
+                   }); 
+                context.commit({ type: 'suggests', suggests: s });
+                context.commit({ type: 'loading', loading: false });
+            }, response => {
+                console.log('error occured!' + JSON.stringify(response));
+                context.commit({ type: 'loading', loading: false });
+            });
+        },
+
+        changeLoc (context, payload) {
+            var am = context.state.markers.find(m => { 
+                /*
+                console.log(`Lat diff: ${Math.abs(m.lat - payload.loc.lat)} Lon diff: ${Math.abs(m.lon - payload.loc.lon)}`);
+                return Math.abs(m.lat - payload.loc.lat) < 0.0005 
+                && Math.abs(m.lon - payload.loc.lon) < 0.0005
+                */
+               var dist = getGeolocDiff(m, payload.loc);
+               console.log(`${m.id} ${dist}`);
+               return dist < 50;
+            });
+            /*
+            if(am && am != context.state.activeMarker) {
+                context.commit({ type: 'activeMarker', activeMarker: am });
+            }
+            */            
+            if(am && !am.active /* && am != context.state.detail */) {
+                am.active = true;
+                context.commit({ type: 'detail', detail: am });
+                context.commit({ type: 'activeMarker', activeMarker: am });
+            }
+            context.commit({ type: 'loc', loc: payload.loc });
+        },
+
+        showPanorama(context, payload) {
+            var h = payload.hide;
+            context.commit({ type: 'panorama', panorama: !h });
+        },
+        endLoading(context, payload) {
+            context.commit({ type: 'loading', loading: false });
+        }
+    }
+  });
+html { overflow-y: auto }
